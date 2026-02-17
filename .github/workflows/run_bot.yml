@@ -1,0 +1,32 @@
+name: QuantBot Diario
+
+on:
+  schedule:
+    # Corre de Lunes a Viernes a las 20:00 UTC (17:00 Argentina)
+    - cron: '0 20 * * 1-5'
+  workflow_dispatch: # Permite correrlo manual con botón
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Bajar código
+      uses: actions/checkout@v3
+
+    - name: Instalar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Instalar librerías
+      run: |
+        pip install -r requirements.txt
+        pip install yfinance --upgrade --no-cache-dir
+
+    - name: Ejecutar QuantBot
+      env:
+        TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        CHAT_ID: ${{ secrets.CHAT_ID }}
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      run: python main.py
