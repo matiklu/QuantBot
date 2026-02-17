@@ -45,12 +45,17 @@ def analizar_riesgo_fundamental(ticker, z_score, tipo_senal, fundamentales):
     txt_noticias = "\n---\n".join(noticias) if noticias else "Sin noticias recientes."
     
     # Formateamos los datos financieros para que la IA los entienda fácil
+    # Formateamos los datos financieros
     if fundamentales:
+        # Lógica para PEG: Si es 0 o None, mostramos "N/A"
+        peg = fundamentales.get('PEG Ratio', 0)
+        str_peg = f"{peg:.2f}" if peg and peg > 0 else "N/A (Dato Yahoo faltante)"
+
         txt_fundamentales = f"""
         - Sector: {fundamentales['Sector']}
         - Valuación (P/E): {fundamentales['P/E Ratio']:.2f} (Ideal < 20)
-        - Crecimiento (PEG): {fundamentales['PEG Ratio']:.2f} (Ideal < 1.0)
-        - Salud (Deuda/Equity): {fundamentales['Deuda/Patrimonio']:.2f} (Ideal < 100)
+        - Crecimiento (PEG): {str_peg}
+        - Salud (Deuda/Patrimonio): {fundamentales['Deuda/Patrimonio']:.2f} (Ideal < 100)
         - Rentabilidad (Margen Neto): {fundamentales['Margen Neto']:.1f}%
         """
     else:
@@ -85,4 +90,5 @@ def analizar_riesgo_fundamental(ticker, z_score, tipo_senal, fundamentales):
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
+
         return f"Error IA: {e}"
