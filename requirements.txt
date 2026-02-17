@@ -1,9 +1,8 @@
 streamlit
 pandas
-https://github.com/twopirllc/pandas-ta/archive/development.zip
+pandas_ta
+numpy<2.0.0
 yfinance
-numpy
 plotly
 requests
 google-generativeai
-
